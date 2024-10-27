@@ -22,8 +22,6 @@ total_0 = int(sum(labels_df['binaryLabels'] == 0) * 0.7)
 images = []
 labels = []
 
-print(total_0)
-
 # Load and preprocess images
 for image_file in image_files:
     label = labels_dict.get(image_file, 0)
@@ -45,9 +43,6 @@ for image_file in image_files:
 
 images = np.array(images).transpose(0, 3, 1, 2)  # Change shape to (N, C, H, W) for convolution
 labels = np.array(labels)
-
-print(images.shape)
-
 
 def balance_dataset(images, labels, target_ratio=0.5, seed=42):
     # Set seed for reproducibility
@@ -96,22 +91,8 @@ balanced_images, balanced_labels = balance_dataset(images, labels, target_ratio=
 # Split the balanced dataset into training and validation sets
 train_images, train_labels, val_images, val_labels = split_dataset(balanced_images, balanced_labels, train_ratio=0.8)
 
-# Step 3: Define Helper Functions
 
-
-# Step 4: Define Layers and Neural Network Classes
-print("Step 4: Define Layers and Neural Network Classes")
-
-
-# Step 5: Define Model Class
-print("Step 5: Define Model Class")
-
-# Instantiate the model
-
-# Step 6: Define Evaluate function
-
-
-# Step 7: Training Loop and Evaluate
+# Step 3: Training Loop and Evaluate
 model = Model()
 
 learning_rate = 0.005
@@ -166,7 +147,7 @@ for epoch in range(epochs):
           f'Validation Loss: {val_avg_loss:.4f}, Validation Accuracy: {val_accuracy * 100:.2f}%')
 
 
-# Step 8: Plot Training and Validation Accuracy
+# Step 4: Plot Training and Validation Accuracy
 plt.plot(range(1, epochs + 1), train_accuracies, marker='o', label='Train Accuracy')
 plt.plot(range(1, epochs + 1), val_accuracies, marker='s', label='Validation Accuracy')
 plt.xlabel('Epochs')
@@ -175,5 +156,5 @@ plt.title('Training and Validation Accuracy Over Epochs')
 plt.legend()
 plt.show()
 
-# Step 9: Final Evaluation on Validation Set
+# Step 5: Final Evaluation on Validation Set
 evaluate(model, val_images, val_labels)
