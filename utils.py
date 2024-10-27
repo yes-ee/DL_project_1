@@ -21,6 +21,10 @@ def softmax(x):
 def cross_entropy_error(y, t):
     return -np.sum(t * np.log(y + 1e-7))
 
+def binary_cross_entropy_error(y, t):
+    epsilon = 1e-7
+    return -np.mean(t * np.log(y + epsilon) + (1 - t) * np.log(1 - y + epsilon))
+
 def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
     """
     Parameters:
@@ -77,3 +81,26 @@ def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
             img[:, :, y:y_max:stride, x:x_max:stride] += col[:, :, y, x, :, :]
 
     return img[:, :, pad:H + pad, pad:W + pad]
+
+def evaluate(model, images, labels):
+    correct_count = 0
+    total_count = images.shape[0]
+    batch_size = 64
+    epoch_loss = 0
+
+    for i in range(0, total_count, batch_size):
+        x_batch = images[i:i + batch_size]
+        t_batch = labels[i:i + batch_size].reshape(-1, 1)
+
+        # Forward pass
+        out = model.predict(x_batch)
+        preds_binary = (out > 0.5).astype(int)
+        correct_count += np.sum(preds_binary == t_batch)
+
+        # Calculate loss
+        loss = binary_cross_entropy_error(out, t_batch)
+        epoch_loss += loss
+
+    accuracy = correct_count / total_count
+    avg_loss = epoch_loss / (total_count // batch_size)
+    return accuracy, avg_loss
